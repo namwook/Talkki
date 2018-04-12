@@ -1,24 +1,21 @@
 extends layout
-
 block content
-    ul#messages
-    form(action='')
-        input#m(autocomplete='off')
-        button Send
-script(src='/jquery.js')
-script(src='/socket.io/socket.io.js')
-script.
-	$(function () {
-		var socket = io('https://localhost:3000');
-
-		$('form').submit(function () {
-			socket.emit('chat message', $('#m').val());
-			$('#m').val('');
-			return false;
-		})
-
-		socket.on('chat message', function (msg) {
-			$('#m').append($('<li>')).text(msg);
-		})
-	});
-
+	ul#messages
+	form(action='')
+		input#m(autocomplete='off')
+		button Send
+	script(src='/jquery.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/socket.io/socket.io.js.map')
+	script.
+		$(function () {
+			const socket = io('http://192.168.0.6:3000');
+			$('form').submit(function () {
+				socket.emit('chat message', $('#m').val());
+				$('#m').val('');
+				return false;
+			});
+			socket.on('chat message', function (msg) {
+				$('#messages').append($('<li>').text(msg));
+			});
+		});
