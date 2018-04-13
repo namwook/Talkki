@@ -9,13 +9,14 @@ block content
 	script(src='/socket.io/socket.io.js.map')
 	script.
 		$(function () {
-			const socket = io('http://192.168.0.6:3000');
+			const socket = io('http://localhost:3000');
 			$('form').submit(function () {
 				socket.emit('chat message', $('#m').val());
 				$('#m').val('');
 				return false;
 			});
 			socket.on('chat message', function (msg) {
+				console.log('socket.on chat msg on client side.');
 				$('#messages').append($('<li>').text(msg));
 			});
 		});
