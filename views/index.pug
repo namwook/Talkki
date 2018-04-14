@@ -1,7 +1,12 @@
 extends layout
 block content
+	form#nick(action='')
+		input#name(autocomplete='off')
+		button Send
+
 	ul#messages
-	form(action='')
+
+	form#msg(action='')
 		input#m(autocomplete='off')
 		button Send
 	script(src='/jquery.js')
@@ -9,14 +14,30 @@ block content
 	script(src='/socket.io/socket.io.js.map')
 	script.
 		$(function () {
-			const socket = io('http://localhost:3000');
-			$('form').submit(function () {
+			const socket = io('http://172.30.1.159:3000');
+
+			$('#nick').submit(function () {
+				socket.emit('set nickname', $('#name').val());
+				return false;
+			});
+
+			$('#msg').submit(function () {
 				socket.emit('chat message', $('#m').val());
 				$('#m').val('');
 				return false;
 			});
+
+			socket.on('connect', function () {
+				$('#messages').append($('<li>').text('a user is connected.'));
+			});
+
+			socket.on('disconnect', function () {
+				$('#messages').append($('<li>').text('a user is disconnected.'));
+			});
+
 			socket.on('chat message', function (msg) {
 				console.log('socket.on chat msg on client side.');
-				$('#messages').append($('<li>').text(msg));
+				$('#messages').append($('<li>').text( msg.id + ': ' + msg.msg));
 			});
+
 		});
