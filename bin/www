@@ -43,7 +43,11 @@ io.on('connection', (socket => {
 	// TODO: Add “{user} is typing” functionality
 	// client에서 input value가 ''가 아니면 emit하고 server에서는 emit event handling해서 client에 입력 중 이라는 메세지 띄우기
 	socket.on('be having input', function (id) {
-		console.log(id + ' is typing..');
+		if(id == ''){
+			console.log('someone is typing..');
+		}else{
+			console.log(id + ' is typing..');
+		}
 	});
 	// TODO: Show who’s online
 	//
