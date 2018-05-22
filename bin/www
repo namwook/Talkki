@@ -37,12 +37,19 @@ io.on('connection', (socket => {
 		io.emit('chat message', {msg: msg, id: socket.id});
 	});
 	// TODO: Add support for nicknames
+	// okay
 	// TODO: Don’t send the same message to the user that sent it himself. Instead, append the message directly as soon as he presses enter.
+	// okay
 	// TODO: Add “{user} is typing” functionality
+	// client에서 input value가 ''가 아니면 emit하고 server에서는 emit event handling해서 client에 입력 중 이라는 메세지 띄우기
+	socket.on('be having input', function (id) {
+		console.log(id + ' is typing..');
+	});
 	// TODO: Show who’s online
+	//
 	// TODO: Add private messaging
+	//
 	socket.on('disconnect', () => {
-		// io.emit('chat message', "someone is disconnected.");
 		console.log(socket.id + 'disconnected at server side.');
 	})
 }));
