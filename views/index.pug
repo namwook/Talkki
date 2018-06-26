@@ -1,54 +1,61 @@
 extends layout
 block content
-	form.bodyform#nick(action='')
-		label set nickname
-		input.forminput#name(autocomplete='off')
-		button Send
+    form.bodyform#nick(action='')
+        label set nickname
+        input.forminput#name(autocomplete='off')
+        button Send
 
-	ul#messages
+    ul#messages
 
-	form.bodyform#msg(action='')
-		label say something
-		input.forminput#m(autocomplete='off')
-		button Send
-	script(src='/jquery.js')
-	script(src='/socket.io/socket.io.js')
-	script(src='/socket.io/socket.io.js.map')
-	script.
-		$(function () {
-			const socket = io('http://localhost:3000');
-			let id = "";
+    form.bodyform#msg(action='')
+        label say something
+        input.forminput#m(autocomplete='off')
+        button Send
+    script(src='/jquery.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/socket.io/socket.io.js.map')
+    script.
+        $(function () {
+            const socket = io('http://localhost:3000');
 
-			$('#nick').submit(function () {
-				id = $('#name').val();
-				socket.emit('set nickname', id);
-				return false;
-			});
+            console.log(`this socket id is ${socket.id}`);
 
-			$('#m').keydown(function () {
-				socket.emit('be having input', id);
-			});
+            let id = "someone";
 
-			$('#msg').submit(function () {
-				socket.emit('chat message', $('#m').val());
-				$('#m').val('');
-				return false;
-			});
+            $('#nick').submit(function () {
+                id = $('#name').val();
+                socket.emit('set nickname', id);
+                return false;
+            });
 
-			socket.on('connect', function () {
-				$('#messages').append($('<li>').text('a user is connected.'));
-			});
+            $('#m').keydown(function () {
+                socket.emit('be having input', id);
+            });
 
-			socket.on('disconnect', function () {
-				$('#messages').append($('<li>').text('a user is disconnected.'));
-			});
+            $('#msg').submit(function () {
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
 
-			socket.on('chat message', function (msg) {
-				console.log('socket.on chat msg on client side.');
-				if (msg.id != id) {
-					$('#messages').append($('<li>').text(msg.id + ': ' + msg.msg));
-				}
-			});
+            socket.on('showKeyStatus', function (msg) {
+                console.log(`client status: ${msg}`);
+                $('#m').attr("value", `${msg}`);
+            });
 
+            socket.on('connect', function () {
+                $('#messages').append($('<li>').text('a user is connected.'));
+            });
 
-		});
+            socket.on('disconnect', function () {
+                $('#messages').append($('<li>').text('a user is disconnected.'));
+            });
+
+            socket.on('chat message', function (msg) {
+                console.log('socket.on chat msg on client side.');
+                if (msg.id != id) {
+                    $('#messages').append($('<li>').text(msg.id + ': ' + msg.msg));
+                }
+            });
+
+        });
