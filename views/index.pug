@@ -17,7 +17,7 @@ block content
     script.
         $(function () {
             const socket = io('http://localhost:3000');
-
+            // Is 'io' async or sync?
             console.log(`this socket id is ${socket.id}`);
 
             let id = "someone";
@@ -52,7 +52,7 @@ block content
             });
 
             socket.on('chat message', function (msg) {
-                console.log('socket.on chat msg on client side.');
+                console.log(`${socket.id} chat msg on client side.`);
                 if (msg.id != id) {
                     $('#messages').append($('<li>').text(msg.id + ': ' + msg.msg));
                 }

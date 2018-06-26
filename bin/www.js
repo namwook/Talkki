@@ -24,7 +24,6 @@ server.on('listening', onListening);
 const io = require('socket.io')(server);
 
 io.on('connection', (socket => {
-    // io.broadcast.emit('chat message', "someone is connected.");
     io.to('a new user has joined the room');
     socket.on('set nickname', function (name) {
         console.log('set nickname in server-side');
@@ -34,18 +33,18 @@ io.on('connection', (socket => {
     });
 
     socket.on('chat message', function (msg) {
-        console.log('socket.on chat the msg on server side.');
+        console.log(`socket.on chat the msg on server side.`);
         io.emit('chat message', {msg: msg, id: socket.id});
     });
 
     // TODO: Add “{user} is typing” functionality
     // 1. client 에서 input value 가 ''가 아니면 emit 하고,
     // 2. server 에서는 emit event handling 해서
-    socket.on('be having input', function (msg) {
+    socket.on('showKeyStatus', function (msg) {
         // 2-1. 각 사용자에게 입력 중 이라는 메세지 띄우기
         // 2-2. *메세지를 쓰고 있는 사용자는 메세지 받으면 안된다. -> Using socket.broadcast.emit method!!
-        socket.broadcast.emit('sending event', { data: msg });
-    })
+        socket.broadcast.emit('showKeyStatus', { data: msg });
+    });
 
 
     // TODO: Show who’s online
@@ -60,7 +59,7 @@ io.on('connection', (socket => {
         console.log(`${socket.id} disconnected at server side.`);
     });
 
-    setTimeout(() => socket.disconnect(true), 5000);
+    // setTimeout(() => socket.disconnect(true), 1000000);
 }));
 
 /**
