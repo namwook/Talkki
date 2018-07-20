@@ -29,7 +29,7 @@ block content
             });
 
             $('#m').keydown(function () {
-                socket.emit('be having input', id);
+                socket.emit('showKeyStatus', id);
             });
 
             $('#msg').submit(function () {

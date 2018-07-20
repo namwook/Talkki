@@ -26,9 +26,7 @@ const io = require('socket.io')(server);
 io.on('connection', (socket => {
     io.to('a new user has joined the room');
     socket.on('set nickname', function (name) {
-        console.log('set nickname in server-side');
         socket.id = name;
-        console.log(`set nickname = ${socket.id}`);
         io.emit('set nickname', name);
     });
 
@@ -43,6 +41,7 @@ io.on('connection', (socket => {
     socket.on('showKeyStatus', function (msg) {
         // 2-1. 각 사용자에게 입력 중 이라는 메세지 띄우기
         // 2-2. *메세지를 쓰고 있는 사용자는 메세지 받으면 안된다. -> Using socket.broadcast.emit method!!
+        console.log('server: showKeyStatus::', msg);
         socket.broadcast.emit('showKeyStatus', { data: msg });
     });
 
