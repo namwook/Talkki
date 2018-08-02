@@ -31,27 +31,17 @@ io.on('connection', (socket => {
     });
 
     socket.on('chat message', function (msg) {
-        console.log(`socket.on chat the msg on server side.`);
         io.emit('chat message', {msg: msg, id: socket.id});
     });
 
-    // TODO: Add “{user} is typing” functionality
-    // 1. client 에서 input value 가 ''가 아니면 emit 하고,
-    // 2. server 에서는 emit event handling 해서
     socket.on('showKeyStatus', function (msg) {
-        // 2-1. 각 사용자에게 입력 중 이라는 메세지 띄우기
-        // 2-2. *메세지를 쓰고 있는 사용자는 메세지 받으면 안된다. -> Using socket.broadcast.emit method!!
-        console.log('server: showKeyStatus::', msg);
-        socket.broadcast.emit('showKeyStatus', { data: msg });
+        socket.broadcast.emit('showKeyStatus', {data: msg});
     });
 
-
-    // TODO: Show who’s online
-
-    // TODO: Add private messaging
-    socket.on('say to someone', (id, msg) => {
-        // send a private message to the socket with the given id
-        socket.to(id).emit('my message', msg);
+    socket.on('say to someone', (id, private_msg) => {
+        console.log(`(server) 보낼 대상: ${id}, \n 메세지: ${private_msg}`);
+        io.emit('my message', id, private_msg);
+        // socket.to(id).emit('my message', id, private_msg);
     });
 
     socket.on('disconnect', () => {

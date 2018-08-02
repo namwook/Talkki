@@ -1,61 +1,27 @@
 extends layout
 block content
-    form.bodyform#nick(action='')
-        label set nickname
-        input.forminput#name(autocomplete='off')
-        button Send
+    .row
+        form.bodyform#nickname(action='')
+            label set nickname
+            input#nicknameInput(autocomplete='off')
+            button Send
+    .row
+        ul.col#print_users_msg
 
-    ul#messages
+    .row
+        .col
+            form.bodyform#input_user_msg(action='')
+                label say something
+                input.forminput#input_msg(autocomplete='off')
+                button Send
+        .col
+            form.bodyform#input_private_msg(action='')
+                label private user name
+                input#private_user_nickname(autocomplete='off')
+                input.forminput#private_input_msg(autocomplete='off')
+                button Send
 
-    form.bodyform#msg(action='')
-        label say something
-        input.forminput#m(autocomplete='off')
-        button Send
     script(src='/jquery.js')
     script(src='/socket.io/socket.io.js')
     script(src='/socket.io/socket.io.js.map')
-    script.
-        $(function () {
-            const socket = io('http://localhost:3000');
-            // Is 'io' async or sync?
-            console.log(`this socket id is ${socket.id}`);
-
-            let id = "someone";
-
-            $('#nick').submit(function () {
-                id = $('#name').val();
-                socket.emit('set nickname', id);
-                return false;
-            });
-
-            $('#m').keydown(function () {
-                socket.emit('showKeyStatus', id);
-            });
-
-            $('#msg').submit(function () {
-                socket.emit('chat message', $('#m').val());
-                $('#m').val('');
-                return false;
-            });
-
-            socket.on('showKeyStatus', function (msg) {
-                console.log(`client status: ${msg}`);
-                $('#m').attr("value", `${msg}`);
-            });
-
-            socket.on('connect', function () {
-                $('#messages').append($('<li>').text('a user is connected.'));
-            });
-
-            socket.on('disconnect', function () {
-                $('#messages').append($('<li>').text('a user is disconnected.'));
-            });
-
-            socket.on('chat message', function (msg) {
-                console.log(`${socket.id} chat msg on client side.`);
-                if (msg.id != id) {
-                    $('#messages').append($('<li>').text(msg.id + ': ' + msg.msg));
-                }
-            });
-
-        });
+    script(src='/javascript/client.js')
